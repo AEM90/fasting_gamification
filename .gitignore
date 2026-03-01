@@ -1,0 +1,4 @@
+node_modules/
+gamification.db
+*.db-shm
+*.db-wal

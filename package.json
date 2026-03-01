@@ -1,0 +1,27 @@
+{
+  "name": "fasting_gamification",
+  "version": "1.0.0",
+  "description": "track success in self-discipline",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AEM90/fasting_gamification.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AEM90/fasting_gamification/issues"
+  },
+  "homepage": "https://github.com/AEM90/fasting_gamification#readme",
+  "dependencies": {
+    "better-sqlite3": "^12.6.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1"
+  }
+}
