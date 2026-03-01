@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fasting &amp; Habits Gamification</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="logo">✝ FastTrack</div>
+      <nav>
+        <button class="tab-btn active" data-tab="dashboard">🏆 Dashboard</button>
+        <button class="tab-btn" data-tab="habits">📋 Habits</button>
+        <button class="tab-btn" data-tab="seasons">🕯 Seasons</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- DASHBOARD TAB -->
+    <section id="tab-dashboard" class="tab-content active">
+      <div class="stats-grid">
+        <div class="stat-card gold">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-value" id="stat-points">0</div>
+          <div class="stat-label">Total XP</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">🎖</div>
+          <div class="stat-value" id="stat-level">1</div>
+          <div class="stat-label">Level</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="stat-streak">0</div>
+          <div class="stat-label">Best Streak</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value" id="stat-today">0</div>
+          <div class="stat-label">Done Today</div>
+        </div>
+      </div>
+
+      <div class="level-bar-container">
+        <div class="level-bar-label">
+          <span>Level <span id="bar-level">1</span></span>
+          <span><span id="bar-xp">0</span> / 100 XP to next level</span>
+        </div>
+        <div class="level-bar-track">
+          <div class="level-bar-fill" id="level-bar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Today's Habits</h2>
+      <div id="dashboard-habits" class="habit-list"></div>
+
+      <h2 class="section-title">Active Season Tasks</h2>
+      <div id="dashboard-season-tasks" class="habit-list"></div>
+    </section>
+
+    <!-- HABITS TAB -->
+    <section id="tab-habits" class="tab-content">
+      <!-- Shop header with filter pills -->
+      <div class="shop-header">
+        <h2 class="section-title" style="margin:0">🛍 Habit Shop</h2>
+        <div class="filter-pills" id="shop-filters">
+          <button class="pill active" data-cat="all">All</button>
+          <button class="pill" data-cat="prayer">🙏 Prayer</button>
+          <button class="pill" data-cat="fasting">✝️ Fasting</button>
+          <button class="pill" data-cat="health">💪 Health</button>
+          <button class="pill" data-cat="study">📖 Study</button>
+          <button class="pill" data-cat="service">🤝 Service</button>
+        </div>
+      </div>
+      <div id="shop-grid" class="shop-grid"></div>
+
+      <!-- Custom habit form (collapsed) -->
+      <details class="custom-habit-details">
+        <summary class="custom-habit-summary">➕ Add a custom habit instead</summary>
+        <div class="card" style="margin-top:0.75rem">
+          <form id="habit-form">
+            <div class="form-row">
+              <input type="text" id="habit-name" placeholder="Habit name *" required maxlength="100" />
+              <input type="text" id="habit-desc" placeholder="Description (optional)" maxlength="200" />
+            </div>
+            <div class="form-row">
+              <select id="habit-category">
+                <option value="general">General</option>
+                <option value="prayer">Prayer</option>
+                <option value="fasting">Fasting</option>
+                <option value="health">Health</option>
+                <option value="study">Study</option>
+                <option value="service">Service</option>
+                <option value="other">Other</option>
+              </select>
+              <input type="number" id="habit-points" placeholder="XP per completion" min="1" max="500" value="10" />
+              <label class="qty-label">Daily target:
+                <input type="number" id="habit-target" min="1" max="99" value="1" class="input-narrow" />
+              </label>
+              <button type="submit" class="btn btn-primary">＋ Add</button>
+            </div>
+          </form>
+        </div>
+      </details>
+
+      <h2 class="section-title">My Habits</h2>
+      <div id="habits-list" class="habit-list"></div>
+    </section>
+
+    <!-- SEASONS TAB -->
+    <section id="tab-seasons" class="tab-content">
+      <div class="card form-card">
+        <h2>Add Fasting Season</h2>
+        <form id="season-form">
+          <div class="form-row">
+            <input type="text" id="season-name" placeholder="Season name *" required maxlength="100" />
+            <select id="season-type">
+              <option value="Lent">Lent</option>
+              <option value="Advent">Advent</option>
+              <option value="Easter">Easter</option>
+              <option value="Christmas">Christmas</option>
+              <option value="Ordinary Time">Ordinary Time</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <input type="text" id="season-desc" placeholder="Description (optional)" maxlength="200" />
+            <label class="date-label">Start: <input type="date" id="season-start" required /></label>
+            <label class="date-label">End: <input type="date" id="season-end" required /></label>
+            <button type="submit" class="btn btn-primary">＋ Add Season</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="seasons-list"></div>
+    </section>
+  </main>
+
+  <!-- MODAL for adding season tasks -->
+  <div id="task-modal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Tasks for <span id="modal-season-name"></span></h3>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <!-- Suggested preset tasks for this season -->
+      <div id="suggested-tasks-section">
+        <p class="suggested-label">Suggested tasks — click to add:</p>
+        <div id="suggested-tasks-grid" class="suggested-grid"></div>
+      </div>
+      <details class="custom-habit-details" style="margin-top:0.75rem">
+        <summary class="custom-habit-summary">➕ Add a custom task instead</summary>
+        <form id="task-form" style="margin-top:0.75rem">
+          <input type="hidden" id="task-season-id" />
+          <input type="text" id="task-name" placeholder="Task name *" required maxlength="100" />
+          <input type="text" id="task-desc" placeholder="Description (optional)" maxlength="200" />
+          <div class="form-row">
+            <select id="task-frequency">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="once">Once</option>
+            </select>
+            <input type="number" id="task-points" placeholder="XP per completion" min="1" max="500" value="15" />
+            <button type="submit" class="btn btn-primary">＋ Add Task</button>
+          </div>
+        </form>
+      </details>
+      <div id="task-list-modal" class="task-list-modal"></div>
+    </div>
+  </div>
+  <div id="modal-backdrop" class="modal-backdrop hidden"></div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
