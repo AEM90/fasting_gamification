@@ -63,29 +63,50 @@
 
     <!-- HABITS TAB -->
     <section id="tab-habits" class="tab-content">
-      <div class="card form-card">
-        <h2>Add New Habit</h2>
-        <form id="habit-form">
-          <div class="form-row">
-            <input type="text" id="habit-name" placeholder="Habit name *" required maxlength="100" />
-            <input type="text" id="habit-desc" placeholder="Description (optional)" maxlength="200" />
-          </div>
-          <div class="form-row">
-            <select id="habit-category">
-              <option value="general">General</option>
-              <option value="prayer">Prayer</option>
-              <option value="fasting">Fasting</option>
-              <option value="health">Health</option>
-              <option value="study">Study</option>
-              <option value="service">Service</option>
-              <option value="other">Other</option>
-            </select>
-            <input type="number" id="habit-points" placeholder="XP per completion" min="1" max="500" value="10" />
-            <button type="submit" class="btn btn-primary">＋ Add Habit</button>
-          </div>
-        </form>
+      <!-- Shop header with filter pills -->
+      <div class="shop-header">
+        <h2 class="section-title" style="margin:0">🛍 Habit Shop</h2>
+        <div class="filter-pills" id="shop-filters">
+          <button class="pill active" data-cat="all">All</button>
+          <button class="pill" data-cat="prayer">🙏 Prayer</button>
+          <button class="pill" data-cat="fasting">✝️ Fasting</button>
+          <button class="pill" data-cat="health">💪 Health</button>
+          <button class="pill" data-cat="study">📖 Study</button>
+          <button class="pill" data-cat="service">🤝 Service</button>
+        </div>
       </div>
+      <div id="shop-grid" class="shop-grid"></div>
 
+      <!-- Custom habit form (collapsed) -->
+      <details class="custom-habit-details">
+        <summary class="custom-habit-summary">➕ Add a custom habit instead</summary>
+        <div class="card" style="margin-top:0.75rem">
+          <form id="habit-form">
+            <div class="form-row">
+              <input type="text" id="habit-name" placeholder="Habit name *" required maxlength="100" />
+              <input type="text" id="habit-desc" placeholder="Description (optional)" maxlength="200" />
+            </div>
+            <div class="form-row">
+              <select id="habit-category">
+                <option value="general">General</option>
+                <option value="prayer">Prayer</option>
+                <option value="fasting">Fasting</option>
+                <option value="health">Health</option>
+                <option value="study">Study</option>
+                <option value="service">Service</option>
+                <option value="other">Other</option>
+              </select>
+              <input type="number" id="habit-points" placeholder="XP per completion" min="1" max="500" value="10" />
+              <label class="qty-label">Daily target:
+                <input type="number" id="habit-target" min="1" max="99" value="1" class="input-narrow" />
+              </label>
+              <button type="submit" class="btn btn-primary">＋ Add</button>
+            </div>
+          </form>
+        </div>
+      </details>
+
+      <h2 class="section-title">My Habits</h2>
       <div id="habits-list" class="habit-list"></div>
     </section>
 
@@ -122,23 +143,31 @@
   <div id="task-modal" class="modal hidden">
     <div class="modal-box">
       <div class="modal-header">
-        <h3>Add Task to <span id="modal-season-name"></span></h3>
+        <h3>Tasks for <span id="modal-season-name"></span></h3>
         <button class="modal-close" id="modal-close">✕</button>
       </div>
-      <form id="task-form">
-        <input type="hidden" id="task-season-id" />
-        <input type="text" id="task-name" placeholder="Task name *" required maxlength="100" />
-        <input type="text" id="task-desc" placeholder="Description (optional)" maxlength="200" />
-        <div class="form-row">
-          <select id="task-frequency">
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="once">Once</option>
-          </select>
-          <input type="number" id="task-points" placeholder="XP per completion" min="1" max="500" value="15" />
-          <button type="submit" class="btn btn-primary">＋ Add Task</button>
-        </div>
-      </form>
+      <!-- Suggested preset tasks for this season -->
+      <div id="suggested-tasks-section">
+        <p class="suggested-label">Suggested tasks — click to add:</p>
+        <div id="suggested-tasks-grid" class="suggested-grid"></div>
+      </div>
+      <details class="custom-habit-details" style="margin-top:0.75rem">
+        <summary class="custom-habit-summary">➕ Add a custom task instead</summary>
+        <form id="task-form" style="margin-top:0.75rem">
+          <input type="hidden" id="task-season-id" />
+          <input type="text" id="task-name" placeholder="Task name *" required maxlength="100" />
+          <input type="text" id="task-desc" placeholder="Description (optional)" maxlength="200" />
+          <div class="form-row">
+            <select id="task-frequency">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="once">Once</option>
+            </select>
+            <input type="number" id="task-points" placeholder="XP per completion" min="1" max="500" value="15" />
+            <button type="submit" class="btn btn-primary">＋ Add Task</button>
+          </div>
+        </form>
+      </details>
       <div id="task-list-modal" class="task-list-modal"></div>
     </div>
   </div>

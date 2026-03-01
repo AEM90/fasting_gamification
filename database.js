@@ -17,6 +17,7 @@ db.exec(`
     description TEXT,
     category TEXT DEFAULT 'general',
     points_per_completion INTEGER DEFAULT 10,
+    daily_target INTEGER DEFAULT 1,
     created_at TEXT DEFAULT (datetime('now'))
   );
 
@@ -24,6 +25,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     habit_id INTEGER NOT NULL,
     completed_date TEXT NOT NULL,
+    count INTEGER DEFAULT 1,
     notes TEXT,
     FOREIGN KEY (habit_id) REFERENCES habits(id) ON DELETE CASCADE,
     UNIQUE(habit_id, completed_date)
@@ -59,4 +61,9 @@ db.exec(`
   );
 `);
 
+// Safe migrations for existing databases
+try { db.exec('ALTER TABLE habits ADD COLUMN daily_target INTEGER DEFAULT 1'); } catch (_) {}
+try { db.exec('ALTER TABLE habit_completions ADD COLUMN count INTEGER DEFAULT 1'); } catch (_) {}
+
 module.exports = db;
+

@@ -9,12 +9,14 @@ router.get('/', (req, res) => {
   const today = new Date().toISOString().split('T')[0];
   const habits = db.prepare(`
     SELECT h.*,
-      CASE WHEN hc.id IS NOT NULL THEN 1 ELSE 0 END AS completed_today,
+      COALESCE(hc.count, 0) AS completions_today_count,
+      CASE WHEN COALESCE(hc.count, 0) >= h.daily_target THEN 1 ELSE 0 END AS completed_today,
       (
         SELECT COUNT(DISTINCT hc2.completed_date)
         FROM habit_completions hc2
         WHERE hc2.habit_id = h.id
           AND hc2.completed_date >= date('now', '-29 days')
+          AND hc2.count >= h.daily_target
       ) AS completions_last_30,
       (
         SELECT COUNT(*) FROM habit_completions hc3
@@ -30,16 +32,18 @@ router.get('/', (req, res) => {
 
 // POST create a habit
 router.post('/', (req, res) => {
-  const { name, description, category, points_per_completion } = req.body;
+  const { name, description, category, points_per_completion, daily_target } = req.body;
   if (!name || typeof name !== 'string' || name.trim().length === 0) {
     return res.status(400).json({ error: 'Habit name is required' });
   }
   const numPoints = Number(points_per_completion);
   const points = Number.isInteger(numPoints) && numPoints > 0 ? numPoints : 10;
+  const numTarget = Number(daily_target);
+  const target = Number.isInteger(numTarget) && numTarget > 0 ? Math.min(numTarget, 99) : 1;
 
   const result = db.prepare(
-    'INSERT INTO habits (name, description, category, points_per_completion) VALUES (?, ?, ?, ?)'
-  ).run(name.trim(), description || null, category || 'general', points);
+    'INSERT INTO habits (name, description, category, points_per_completion, daily_target) VALUES (?, ?, ?, ?, ?)'
+  ).run(name.trim(), description || null, category || 'general', points, target);
 
   const habit = db.prepare('SELECT * FROM habits WHERE id = ?').get(result.lastInsertRowid);
   res.status(201).json(habit);
@@ -57,7 +61,7 @@ router.delete('/:id', (req, res) => {
   res.json({ success: true });
 });
 
-// POST toggle habit completion for a given date (defaults to today)
+// POST toggle/increment habit completion for a given date (defaults to today)
 router.post('/:id/complete', (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id) || id < 1) {
@@ -68,19 +72,31 @@ router.post('/:id/complete', (req, res) => {
 
   const date = req.body.date || new Date().toISOString().split('T')[0];
   const notes = req.body.notes || null;
+  const target = habit.daily_target || 1;
 
   const existing = db.prepare(
-    'SELECT id FROM habit_completions WHERE habit_id = ? AND completed_date = ?'
+    'SELECT id, count FROM habit_completions WHERE habit_id = ? AND completed_date = ?'
   ).get(id, date);
 
-  if (existing) {
-    db.prepare('DELETE FROM habit_completions WHERE habit_id = ? AND completed_date = ?').run(id, date);
-    res.json({ completed: false, message: 'Habit unchecked' });
-  } else {
+  if (!existing) {
+    // First completion of the day
     db.prepare(
-      'INSERT INTO habit_completions (habit_id, completed_date, notes) VALUES (?, ?, ?)'
+      'INSERT INTO habit_completions (habit_id, completed_date, count, notes) VALUES (?, ?, 1, ?)'
     ).run(id, date, notes);
-    res.json({ completed: true, message: 'Habit completed!', points: habit.points_per_completion });
+    const completed = target <= 1;
+    res.json({ count: 1, daily_target: target, completed, points: habit.points_per_completion,
+      message: completed ? 'Habit completed!' : `1 / ${target} done` });
+  } else if (existing.count < target) {
+    // Increment toward target
+    const newCount = existing.count + 1;
+    db.prepare('UPDATE habit_completions SET count = ? WHERE id = ?').run(newCount, existing.id);
+    const completed = newCount >= target;
+    res.json({ count: newCount, daily_target: target, completed, points: habit.points_per_completion,
+      message: completed ? 'Habit completed!' : `${newCount} / ${target} done` });
+  } else {
+    // Already at target — reset
+    db.prepare('DELETE FROM habit_completions WHERE id = ?').run(existing.id);
+    res.json({ count: 0, daily_target: target, completed: false, points: 0, message: 'Habit reset' });
   }
 });
 
@@ -121,7 +137,7 @@ router.get('/:id/streak', (req, res) => {
 // GET stats (total points, level, breakdown)
 router.get('/stats/summary', (req, res) => {
   const totalPoints = db.prepare(`
-    SELECT COALESCE(SUM(h.points_per_completion), 0) AS total
+    SELECT COALESCE(SUM(h.points_per_completion * hc.count), 0) AS total
     FROM habit_completions hc
     JOIN habits h ON h.id = hc.habit_id
   `).get().total;

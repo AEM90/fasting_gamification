@@ -1,7 +1,81 @@
+/* ===================== PRESETS ===================== */
+const MAX_SHOP_QTY = 20;
+
+const HABIT_PRESETS = [
+  { name: 'Morning Prayer',        category: 'prayer',   icon: '🌅', xp: 10, desc: 'Start your day with prayer' },
+  { name: 'Evening Prayer',        category: 'prayer',   icon: '🌙', xp: 10, desc: 'End your day in gratitude' },
+  { name: 'Rosary',                category: 'prayer',   icon: '📿', xp: 20, desc: 'Meditate on the mysteries' },
+  { name: 'Liturgy of the Hours',  category: 'prayer',   icon: '⏰', xp: 20, desc: 'Pray the Divine Office' },
+  { name: 'Angelus',               category: 'prayer',   icon: '🔔', xp: 10, desc: 'Midday Marian prayer' },
+  { name: 'Scripture Reading',     category: 'study',    icon: '📖', xp: 15, desc: 'Read and reflect on the Bible' },
+  { name: 'Bible Study',           category: 'study',    icon: '✝️', xp: 20, desc: 'Deep study of scripture' },
+  { name: 'Read a Christian Book', category: 'study',    icon: '📚', xp: 12, desc: 'Spiritual reading' },
+  { name: 'Catechism Study',       category: 'study',    icon: '📜', xp: 15, desc: 'Study the faith' },
+  { name: 'Fast from Meat',        category: 'fasting',  icon: '🥩', xp: 15, desc: 'Abstain from meat' },
+  { name: 'Water Fast',            category: 'fasting',  icon: '💧', xp: 30, desc: 'Fast with water only' },
+  { name: 'Fast from Social Media',category: 'fasting',  icon: '📵', xp: 15, desc: 'Digital detox' },
+  { name: 'Intermittent Fast',     category: 'fasting',  icon: '🕐', xp: 20, desc: 'Skip a meal / fast window' },
+  { name: 'Fast from Sweets',      category: 'fasting',  icon: '🍫', xp: 10, desc: 'No sugar today' },
+  { name: 'Morning Walk',          category: 'health',   icon: '🚶', xp: 10, desc: '15+ minute walk' },
+  { name: 'Exercise',              category: 'health',   icon: '💪', xp: 15, desc: 'Physical workout' },
+  { name: 'Drink 8 Glasses Water', category: 'health',   icon: '🥤', xp:  8, desc: 'Stay hydrated' },
+  { name: 'Sleep by 10 PM',        category: 'health',   icon: '😴', xp: 10, desc: 'Discipline your rest' },
+  { name: 'Act of Kindness',       category: 'service',  icon: '❤️', xp: 15, desc: 'Do something kind' },
+  { name: 'Give Alms',             category: 'service',  icon: '🕊️', xp: 25, desc: 'Give to those in need' },
+  { name: 'Volunteer',             category: 'service',  icon: '🤝', xp: 20, desc: 'Serve your community' },
+];
+
+const SEASON_TASK_PRESETS = {
+  Lent: [
+    { name: 'Stations of the Cross',      icon: '✝️', xp: 20, freq: 'weekly' },
+    { name: 'Abstain from Meat (Friday)', icon: '🥩', xp: 15, freq: 'weekly' },
+    { name: 'Almsgiving',                 icon: '🕊️', xp: 25, freq: 'weekly' },
+    { name: 'Lenten Devotional',          icon: '📖', xp: 15, freq: 'daily'  },
+    { name: 'Fast from Sweets',           icon: '🍫', xp: 10, freq: 'daily'  },
+    { name: 'Extra Rosary Decade',        icon: '📿', xp: 15, freq: 'daily'  },
+    { name: 'Attend Mass',                icon: '⛪', xp: 30, freq: 'weekly' },
+    { name: 'Confession',                 icon: '🙏', xp: 40, freq: 'once'   },
+  ],
+  Advent: [
+    { name: 'Advent Wreath Prayer',  icon: '🕯', xp: 15, freq: 'daily'  },
+    { name: 'Advent Devotional',     icon: '📖', xp: 15, freq: 'daily'  },
+    { name: 'Fast on Wednesdays',    icon: '🤲', xp: 20, freq: 'weekly' },
+    { name: 'Nativity Reflection',   icon: '⭐', xp: 15, freq: 'daily'  },
+    { name: 'Act of Charity',        icon: '❤️', xp: 20, freq: 'weekly' },
+  ],
+  Easter: [
+    { name: 'Divine Mercy Chaplet', icon: '🕊️', xp: 20, freq: 'daily' },
+    { name: 'Regina Caeli Prayer',  icon: '🙏', xp: 10, freq: 'daily' },
+    { name: 'Easter Novena',        icon: '✝️', xp: 25, freq: 'daily' },
+    { name: 'Alleluia Reflection',  icon: '🌟', xp: 15, freq: 'daily' },
+  ],
+  Christmas: [
+    { name: 'Christmas Novena',    icon: '⭐', xp: 20, freq: 'daily'  },
+    { name: 'Attend Mass',         icon: '⛪', xp: 30, freq: 'weekly' },
+    { name: 'Christmas Charity',   icon: '🎁', xp: 25, freq: 'once'   },
+    { name: "O Antiphons Prayer",  icon: '🕯', xp: 15, freq: 'daily'  },
+  ],
+  'Ordinary Time': [
+    { name: 'Sunday Mass',   icon: '⛪', xp: 30, freq: 'weekly' },
+    { name: 'Daily Rosary',  icon: '📿', xp: 20, freq: 'daily'  },
+    { name: 'Weekly Fast',   icon: '🤲', xp: 20, freq: 'weekly' },
+    { name: 'Lectio Divina', icon: '📖', xp: 15, freq: 'daily'  },
+  ],
+  Other: [
+    { name: 'Special Prayer',     icon: '🙏', xp: 15, freq: 'daily'  },
+    { name: 'Fasting',            icon: '✝️', xp: 20, freq: 'daily'  },
+    { name: 'Scripture Reading',  icon: '📖', xp: 15, freq: 'daily'  },
+    { name: 'Acts of Charity',    icon: '❤️', xp: 20, freq: 'weekly' },
+  ],
+};
+
 /* global state */
 let habits = [];
 let seasons = [];
 let stats = { totalPoints: 0, level: 1, xpInLevel: 0 };
+let shopFilter = 'all';
+/* per-card quantity state for shop (keyed by preset index) */
+const shopQty = {};
 
 /* ===================== UTILS ===================== */
 function showToast(msg, type = '') {
@@ -110,11 +184,24 @@ async function loadDashboard() {
 
 function buildHabitCard(h, showDelete = true) {
   const card = document.createElement('div');
-  card.className = 'habit-card' + (h.completed_today ? ' completed' : '');
+  const count = h.completions_today_count || 0;
+  const target = h.daily_target || 1;
+  const done = count >= target;
+  card.className = 'habit-card' + (done ? ' completed' : '');
   card.dataset.habitId = h.id;
 
+  let checkLabel;
+  if (target === 1) {
+    checkLabel = done ? '✓' : '';
+  } else {
+    checkLabel = done ? '✓' : `${count}`;
+  }
+  const progressBadge = target > 1
+    ? `<span class="badge badge-progress ${done ? 'badge-progress-done' : ''}">${count} / ${target}</span>`
+    : '';
+
   card.innerHTML = `
-    <button class="check-btn" title="Toggle complete">${h.completed_today ? '✓' : ''}</button>
+    <button class="check-btn" title="Log completion">${checkLabel}</button>
     <div class="habit-info">
       <div class="habit-name">${escHtml(h.name)}</div>
       <div class="habit-meta">${h.description ? escHtml(h.description) : ''}</div>
@@ -122,6 +209,7 @@ function buildHabitCard(h, showDelete = true) {
     <div class="habit-badges">
       <span class="badge badge-cat">${categoryEmoji(h.category)} ${escHtml(h.category)}</span>
       <span class="badge badge-xp">⭐ ${h.points_per_completion} XP</span>
+      ${progressBadge}
       <span class="badge badge-streak">🔥 ${h.completions_last_30 || 0}d</span>
     </div>
     ${showDelete ? `<button class="delete-btn" title="Delete habit">🗑</button>` : ''}
@@ -146,7 +234,7 @@ function buildTaskCard(t, seasonId) {
       <div class="habit-meta">${t.description ? escHtml(t.description) : ''}</div>
     </div>
     <div class="habit-badges">
-      <span class="badge badge-season">${t.frequency === 'daily' ? '📅' : t.frequency === 'weekly' ? '📆' : '☑️'} ${escHtml(t.frequency)}</span>
+      <span class="badge badge-season">${freqIcon(t.frequency)} ${escHtml(t.frequency)}</span>
       <span class="badge badge-xp">⭐ ${t.points_per_completion} XP</span>
     </div>
     <button class="delete-btn" title="Delete task">🗑</button>
@@ -162,17 +250,33 @@ function escHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function freqIcon(freq) {
+  return freq === 'daily' ? '📅' : freq === 'weekly' ? '📆' : '☑️';
+}
+
 async function toggleHabit(id, card) {
   try {
     const res = await apiFetch(`/api/habits/${id}/complete`, { method: 'POST', body: JSON.stringify({}) });
-    if (res.completed) {
-      card.classList.add('completed');
-      card.querySelector('.check-btn').textContent = '✓';
-      showToast(`+${res.points} XP! ${res.message}`, 'success');
+    const target = res.daily_target || 1;
+    const count = res.count || 0;
+    const done = res.completed;
+
+    card.classList.toggle('completed', done);
+    const btn = card.querySelector('.check-btn');
+    if (target === 1) {
+      btn.textContent = done ? '✓' : '';
     } else {
-      card.classList.remove('completed');
-      card.querySelector('.check-btn').textContent = '';
+      btn.textContent = done ? '✓' : (count > 0 ? `${count}` : '');
     }
+    // Update progress badge if present
+    const pb = card.querySelector('.badge-progress');
+    if (pb) {
+      pb.textContent = `${count} / ${target}`;
+      pb.classList.toggle('badge-progress-done', done);
+    }
+
+    if (res.points > 0) showToast(`+${res.points} XP! ${res.message}`, 'success');
+    else if (res.count === 0) showToast('Reset ↺');
     refreshStats();
   } catch (e) {
     showToast(e.message, 'error');
@@ -210,7 +314,82 @@ async function refreshStats() {
 /* ===================== HABITS ===================== */
 async function loadHabits() {
   habits = await apiFetch('/api/habits');
+  renderShop();
   renderHabitsList();
+}
+
+/* ── Shop ── */
+function renderShop() {
+  const grid = document.getElementById('shop-grid');
+  grid.innerHTML = '';
+  // Iterate with original index to keep qty state stable across filter changes
+  HABIT_PRESETS.forEach((preset, idx) => {
+    if (shopFilter !== 'all' && preset.category !== shopFilter) return;
+    if (!(idx in shopQty)) shopQty[idx] = 1;
+    const card = document.createElement('div');
+    card.className = 'shop-card';
+    card.innerHTML = `
+      <div class="shop-card-icon">${preset.icon}</div>
+      <div class="shop-card-name">${escHtml(preset.name)}</div>
+      <div class="shop-card-desc">${escHtml(preset.desc)}</div>
+      <div class="shop-card-meta">
+        <span class="badge badge-xp">⭐ ${preset.xp} XP</span>
+        <span class="badge badge-cat">${categoryEmoji(preset.category)} ${escHtml(preset.category)}</span>
+      </div>
+      <div class="shop-card-footer">
+        <div class="qty-stepper">
+          <button class="qty-btn qty-minus" type="button">−</button>
+          <span class="qty-val" id="qty-${idx}">${shopQty[idx]}</span>
+          <button class="qty-btn qty-plus" type="button">＋</button>
+        </div>
+        <span class="qty-hint">per day</span>
+        <button class="btn btn-primary shop-add-btn" type="button">＋ Add</button>
+      </div>
+    `;
+    card.querySelector('.qty-minus').addEventListener('click', () => {
+      if (shopQty[idx] > 1) { shopQty[idx]--; card.querySelector(`#qty-${idx}`).textContent = shopQty[idx]; }
+    });
+    card.querySelector('.qty-plus').addEventListener('click', () => {
+      if (shopQty[idx] < MAX_SHOP_QTY) { shopQty[idx]++; card.querySelector(`#qty-${idx}`).textContent = shopQty[idx]; }
+    });
+    card.querySelector('.shop-add-btn').addEventListener('click', () => addPresetHabit(preset, shopQty[idx], card));
+    grid.appendChild(card);
+  });
+}
+
+/* filter pills */
+document.getElementById('shop-filters').addEventListener('click', e => {
+  const pill = e.target.closest('.pill');
+  if (!pill) return;
+  document.querySelectorAll('#shop-filters .pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  shopFilter = pill.dataset.cat;
+  renderShop();
+});
+
+async function addPresetHabit(preset, daily_target, card) {
+  const btn = card.querySelector('.shop-add-btn');
+  btn.disabled = true;
+  try {
+    await apiFetch('/api/habits', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: preset.name,
+        description: preset.desc,
+        category: preset.category,
+        points_per_completion: preset.xp,
+        daily_target,
+      }),
+    });
+    btn.textContent = '✓ Added!';
+    btn.style.background = '#2a8a50';
+    showToast(`${preset.icon} ${preset.name} added!`, 'success');
+    await loadHabits();
+    setTimeout(() => { btn.textContent = '＋ Add'; btn.style.background = ''; btn.disabled = false; }, 1800);
+  } catch (e) {
+    showToast(e.message, 'error');
+    btn.disabled = false;
+  }
 }
 
 function renderHabitsList() {
@@ -229,13 +408,15 @@ document.getElementById('habit-form').addEventListener('submit', async e => {
   const description = document.getElementById('habit-desc').value.trim();
   const category = document.getElementById('habit-category').value;
   const points_per_completion = Number(document.getElementById('habit-points').value) || 10;
+  const daily_target = Number(document.getElementById('habit-target').value) || 1;
   try {
     await apiFetch('/api/habits', {
       method: 'POST',
-      body: JSON.stringify({ name, description, category, points_per_completion }),
+      body: JSON.stringify({ name, description, category, points_per_completion, daily_target }),
     });
     document.getElementById('habit-form').reset();
     document.getElementById('habit-points').value = 10;
+    document.getElementById('habit-target').value = 1;
     showToast('Habit added!', 'success');
     loadHabits();
   } catch (e) {
@@ -358,9 +539,43 @@ function openTaskModal(season) {
   document.getElementById('task-season-id').value = season.id;
   document.getElementById('task-form').reset();
   document.getElementById('task-points').value = 15;
+  renderSuggestedTasks(season);
   loadModalTasks(season.id);
   document.getElementById('task-modal').classList.remove('hidden');
   document.getElementById('modal-backdrop').classList.remove('hidden');
+}
+
+function renderSuggestedTasks(season) {
+  const presets = SEASON_TASK_PRESETS[season.type] || SEASON_TASK_PRESETS['Other'];
+  const grid = document.getElementById('suggested-tasks-grid');
+  const section = document.getElementById('suggested-tasks-section');
+  grid.innerHTML = '';
+  if (!presets || presets.length === 0) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  presets.forEach(p => {
+    const chip = document.createElement('button');
+    chip.className = 'suggest-chip';
+    chip.type = 'button';
+    chip.innerHTML = `${p.icon} ${escHtml(p.name)} <span class="chip-meta">${freqIcon(p.freq)} ⭐${p.xp}</span>`;
+    chip.addEventListener('click', async () => {
+      chip.disabled = true;
+      chip.classList.add('chip-added');
+      try {
+        await apiFetch(`/api/seasons/${season.id}/tasks`, {
+          method: 'POST',
+          body: JSON.stringify({ name: p.name, description: null, frequency: p.freq, points_per_completion: p.xp }),
+        });
+        showToast(`${p.icon} ${p.name} added!`, 'success');
+        chip.innerHTML = `✓ ${escHtml(p.name)}`;
+        loadModalTasks(season.id);
+      } catch (e) {
+        showToast(e.message, 'error');
+        chip.disabled = false;
+        chip.classList.remove('chip-added');
+      }
+    });
+    grid.appendChild(chip);
+  });
 }
 
 function closeTaskModal() {
